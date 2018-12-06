@@ -1,0 +1,77 @@
+/**
+ * 重置样式
+ */
+
+html, body, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button {
+  padding: 0;
+  margin: 0;
+}
+
+/* \5FAE\8F6F\96C5\9ED1 微软雅黑  '\5b8b\4f53'宋体 */
+html, body {
+  font: 12px/1.5 '\5FAE\8F6F\96C5\9ED1', '\5b8b\4f53', sans-serif, arial;
+}
+
+input, textarea, select, button {
+  resize: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  outline: none;
+  font: 12px/1.5 '\5FAE\8F6F\96C5\9ED1', '\5b8b\4f53', sans-serif, arial;
+}
+
+button, input[type="button"], input[type=submit], input[type=reset] {
+  cursor: pointer;
+  border: 0 none;
+}
+
+input[type="text"] {
+  color: #ccc;
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
+}
+
+/* 关闭ie10里面的叉  */
+input::-ms-clear {
+  display: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  border: 0;
+}
+
+a img {
+  border: 0 none;
+}
+
+a {
+  outline: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+  /* stylelint-disable */
+  blr: expression(this.onFocus=this.blur());
+  /* stylelint-enable */
+}
+
+a:focus {
+  outline: 0;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix::after {
+  display: block;
+  content: '';
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}

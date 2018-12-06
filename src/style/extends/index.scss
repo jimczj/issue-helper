@@ -1,0 +1,16 @@
+%oneline {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// 文字省略：两行
+%twoline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+}

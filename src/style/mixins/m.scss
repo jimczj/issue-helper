@@ -1,0 +1,26 @@
+/**
+ * @desc modifiers get appended with "--" and the $name
+ * @example scss
+ * .block {
+ *   display: flex;
+ *   @include m(mod) {
+ *     width: 100%;
+ *   }
+ * }
+ *
+ * // CSS Output
+ * .block {
+ *   display: flex;
+ * }
+ * .block--mod {
+ *   width: 100%;
+ * }
+ *
+ * // also supports .block__item--mod {}
+ */
+
+@mixin m($name) {
+  @at-root #{&}--#{$name} {
+    @content;
+  }
+}

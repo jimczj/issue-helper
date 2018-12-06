@@ -1,0 +1,122 @@
+$o2-prefix: o2;
+
+// Grid system
+$grid-columns: 6;
+$grid-gutter-width: 10;
+
+// mixins for clearfix
+// ------------------------
+@mixin clearfix() {
+  zoom: 1;
+
+  &::before,
+  &::after {
+    content: ' ';
+  }
+
+  &::after {
+    clear: both;
+    visibility: hidden;
+    font-size: 0;
+    height: 0;
+  }
+}
+
+// mixins for grid system
+// ------------------------
+@mixin make-row($gutter: $grid-gutter-width) {
+  //position: relative;
+  margin-left: ($gutter / -2);
+  margin-right: ($gutter / -2);
+  height: auto;
+
+  @include clearfix;
+}
+
+@mixin make-grid-columns() {
+  @for $i from 1 through $grid-columns {
+    .#{$o2-prefix}-col-#{$i},
+    .#{$o2-prefix}-col-xs-#{$i},
+    .#{$o2-prefix}-col-sm-#{$i},
+    .#{$o2-prefix}-col-md-#{$i},
+    .#{$o2-prefix}-col-lg-#{$i} {
+      position: relative;
+      min-height: 1px;
+      padding-left: ($grid-gutter-width / 2);
+      padding-right: ($grid-gutter-width / 2);
+    }
+  }
+}
+
+@mixin float-grid-columns($class) {
+  @for $i from 1 through $grid-columns {
+    .#{$o2-prefix}-col#{$class}-#{$i} {
+      float: left;
+      flex: 0 0 auto;
+    }
+  }
+}
+
+@mixin loop-grid-columns($index, $class) {
+  @for $i from 1 through $grid-columns {
+    @if $i == 0 {
+      .#{$o2-prefix}-col#{$class}-#{$i} {
+        display: none;
+      }
+
+      .#{$o2-prefix}-col-push-#{$i} {
+        left: auto;
+      }
+
+      .#{$o2-prefix}-col-pull-#{$i} {
+        right: auto;
+      }
+
+      .#{$o2-prefix}-col#{$class}-push-#{$i} {
+        left: auto;
+      }
+
+      .#{$o2-prefix}-col#{$class}-pull-#{$i} {
+        right: auto;
+      }
+
+      .#{$o2-prefix}-col#{$class}-offset-#{$i} {
+        margin-left: 0;
+      }
+
+      .#{$o2-prefix}-col#{$class}-order-#{$i} {
+        order: 0;
+      }
+    }
+
+    @else {
+      .#{$o2-prefix}-col#{$class}-#{$i} {
+        display: block;
+        width: percentage(($i / $grid-columns));
+      }
+
+      .#{$o2-prefix}-col#{$class}-push-#{$i} {
+        left: percentage(($i / $grid-columns));
+      }
+
+      .#{$o2-prefix}-col#{$class}-pull-#{$i} {
+        right: percentage(($i / $grid-columns));
+      }
+
+      .#{$o2-prefix}-col#{$class}-offset-#{$i} {
+        margin-left: percentage(($i / $grid-columns));
+      }
+
+      .#{$o2-prefix}-col#{$class}-order-#{$i} {
+        order: $i;
+      }
+    }
+  }
+}
+
+@mixin make-grid($class: '') {
+  @include float-grid-columns($class);
+  @include loop-grid-columns($grid-columns, $class);
+}
+
+@include make-grid('test');

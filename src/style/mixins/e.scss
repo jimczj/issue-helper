@@ -1,0 +1,24 @@
+/**
+ * @desc elements get appended with "__" and the $name
+  * @example scss
+ * .block {
+ *   display: flex;
+ *     @include e(element) {
+ *     flex: 1;
+ *   }
+ * }
+ *
+ * // CSS Output
+ * .block {
+ *   display: flex;
+ * }
+ * .block__element {
+ *   flex: 1;
+ * }
+ */
+
+@mixin e($name) {
+  @at-root #{&}__#{$name} {
+    @content;
+  }
+}

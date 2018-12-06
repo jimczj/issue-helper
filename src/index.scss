@@ -1,0 +1,18 @@
+@charset "UTF-8";
+@import './style/reset';
+@import '~antd/dist/antd.css';
+
+.app {
+  width: 1190px;
+  margin: 0 auto;
+  min-height: 100%;
+}
+a {
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:link,
+  &:visited {
+    color: black;
+  }
+}

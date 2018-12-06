@@ -1,0 +1,33 @@
+/**
+ * 商品用布局
+ *  包括：大图（四列、五列、六列）
+ *
+ * @param {string} $modName [Default ''，例如 '.lc-goods']
+ *
+ */
+ @import './csswizardry-grids';
+
+ @mixin goods-grid($modName) {
+  #{$modName} {
+    margin-left: 0;
+
+    @extend .grid;
+
+    .grid__item {
+      padding-left: 0
+    }
+
+    @include m(cols4) {
+
+    }
+
+    @include m(cols5) {
+
+    }
+
+    @include m(cols6) {
+
+    }
+
+  }
+}

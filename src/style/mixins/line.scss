@@ -1,0 +1,20 @@
+// 混合：
+// 使用方法：@include line(3);
+
+// 文字省略：自定义多行
+// $num:［行数］
+// 使用：@inlucde line(3);
+@mixin line($num: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if ($num == 1) {
+    white-space: nowrap;
+  }
+
+  @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $num;
+    -webkit-box-orient: vertical;
+  }
+}

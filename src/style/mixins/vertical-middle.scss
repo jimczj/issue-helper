@@ -1,0 +1,12 @@
+@mixin vertical-middle {
+  display: inline-block;
+  vertical-align: middle;
+
+  &::after {
+    content: '';
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+  }
+}

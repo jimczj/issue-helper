@@ -1,0 +1,37 @@
+// 按钮改进版
+// $width:［按钮宽度］
+// $height:［按钮高度］
+// $fontsize:［字体大小］
+// $bgcolor:［按钮背景色］
+// $color:［文字颜色］默认 #fff
+// $radius:［按钮圆角］默认 2px
+// 使用：@include button(100px, 40px, 14px, $color_red); 或 @include button(100px, 40px, 14px, $color_red, #fff, 5px);
+@mixin button(
+  $width,
+  $height,
+  $fontsize,
+  $bgcolor,
+  $color: #fff,
+  $radius: 2px
+) {
+  display: block;
+  width: $width;
+  height: $height;
+  line-height: $height;
+  text-align: center;
+  font-size: $fontsize;
+  border-radius: $radius;
+  background-color: $bgcolor;
+
+  &:active {
+    background-color: darken($bgcolor, 5%);
+  }
+
+  @if ($bgcolor == $btn_disabled) {
+    color: #999;
+  }
+
+  @else {
+    color: $color;
+  }
+}
