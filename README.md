@@ -1,15 +1,15 @@
-# 简历生成器
+# react-pj-tpl
 
 ## 简介
 
-根据配置的 json 数据生成简历，功能正在完善中
+react + react-router + mobx + antd 项目模版
 
 ## 安装项目
 
 ```shell
 
-git clone https://github.com/jimczj/resume-generator
-cd resume-generator
+git clone https://github.com/jimczj/react-pj-tpl
+cd react-pj-tpl
 npm i
 ```
 
