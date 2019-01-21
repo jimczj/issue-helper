@@ -1,14 +1,14 @@
-# react-pj-tpl
+# issue-helper
 
 ## 简介
 
-react + react-router + mobx + antd 项目模版
+根据配置文件生成 github issue 提交表单
 
 ## 安装项目
 
 ```shell
 
-git clone https://github.com/jimczj/react-pj-tpl
+git clone https://github.com/jimczj/issue-helper
 cd react-pj-tpl
 npm i
 ```

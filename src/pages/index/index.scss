@@ -1,10 +1,70 @@
-.index-page {
+@charset "UTF-8";
+@import '../../style/index.scss';
+
+$mainWidth: 800px;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.page {
   position: relative;
   width: 100%;
   margin: 0 auto;
-  text-align: center;
+  background-color: #ececec;
+  overflow: hidden;
 }
-.container {
-  margin: 0 auto;
+
+.issue-header {
+  width: 100%;
+  background-color: #fff;
+  padding: 10px 0;
+  &-main {
+    width: $mainWidth;
+    margin: 0 auto;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 400;
+    display: inline;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  &-btn {
+    float: right;
+    @include vertical-middle;
+  }
+}
+
+.issue-main {
+  width: $mainWidth;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
+}
+.issue-form {
+  &-item {
+    margin-top: 15px;
+  }
+  &-item-label {
+    font-size: 16px;
+  }
+  &-input {
+    margin-top: 10px;
+  }
+}
+.issue-readme {
+  padding: 10px;
+  font-size: 16px;
+  text-align: left;
+
+}
+.issue-preview {
+  padding: 20px;
   text-align: center;
 }

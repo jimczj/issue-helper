@@ -1,6 +1,8 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const config = require('./config.js')
+
 const resolveApp = relativePath => path.join(__dirname, relativePath)
 
 const babelLoader = require.resolve('babel-loader')
@@ -25,6 +27,8 @@ const sassLoader = {
   }
 }
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
+  title: config.title,
+  logo: config.logo,
   inject: false,
   template: resolveApp('./src/index.html')
 })

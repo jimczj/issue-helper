@@ -5,6 +5,8 @@ const autoprefixer = require('autoprefixer')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
+const config = require('./config.js')
+
 const resolveApp = relativePath => path.resolve(__dirname, relativePath)
 
 const babelLoader = require.resolve('babel-loader')
@@ -46,6 +48,8 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: 'css/[name].[hash:4].css'
 })
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
+  title: config.title,
+  logo: config.logo,
   inject: false,
   template: resolveApp('./src/index.html'),
   minify: {

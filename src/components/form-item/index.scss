@@ -1,0 +1,15 @@
+.form-item {
+  margin-top: 15px;
+
+  &__label {
+    font-size: 16px;
+  }
+  &__input {
+    margin-top: 10px;
+  }
+  &__error-msg {
+    font-size: 14px;
+    color: red;
+    min-height: 21px;
+  }
+}
