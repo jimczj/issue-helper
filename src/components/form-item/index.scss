@@ -1,15 +1,33 @@
-.form-item {
+$errorColor:#ff4949;
+$component: '.form-item';
+#{$component} {
   margin-top: 15px;
 
   &__label {
     font-size: 16px;
   }
+
   &__input {
     margin-top: 10px;
   }
+
   &__error-msg {
     font-size: 14px;
-    color: red;
+    color: $errorColor;
     min-height: 21px;
+  }
+
+  &--error {
+    .ant-input {
+      border-color: $errorColor;
+    }
+  }
+
+  &--required {
+    #{$component}__label::after {
+      content: '*';
+      color: $errorColor;
+      display: inline-block;
+    }
   }
 }

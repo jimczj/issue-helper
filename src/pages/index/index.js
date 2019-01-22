@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Avatar, Select, Modal } from 'antd'
+import { Button, Avatar, Select, Modal, message } from 'antd'
 import { markdown } from 'markdown'
 
 import FormItem from '../../components/form-item'
@@ -8,33 +8,85 @@ import './index.scss'
 
 markdown.toHTML('Hello *World*!')
 const Option = Select.Option
-const options = config.options
+config.forms.forEach(form => {
+  form.formItems.forEach(inputItem => {
+    inputItem.error = ''
+    inputItem.errorMsg = ''
+    inputItem.value = ''
+  })
+})
 
 export default class Index extends React.Component {
   state = {
+    issueMd: '',
     visible: false,
-    cateIdx: 0
+    cateIdx: 0,
+    forms: config.forms
   }
 
-  onChange = (stateName, value) => {
+  handleChangeValue (idx, event) {
+    const { forms, cateIdx } = this.state
+    forms[cateIdx].formItems[idx].value = event.target.value
+    this.setState({ forms })
+  }
+
+  onChange (stateName, value) {
     this.setState({ [stateName]: value })
   }
 
+  handleBlur (idx) {
+    const { forms, cateIdx } = this.state
+    const item = forms[cateIdx].formItems[idx]
+    if (item.required && !item.value.trim()) {
+      item.error = true
+      item.errorMsg = '该项必填'
+    } else {
+      item.error = false
+      item.errorMsg = ''
+    }
+    this.setState({ forms })
+  }
+
+  preview = () => {
+    const { forms, cateIdx } = this.state
+    const inputItems = forms[cateIdx].formItems
+    //  检测是否符合
+    let hasError = false
+    inputItems.forEach(item => {
+      if (item.required && !item.value.trim()) {
+        item.error = true
+        item.errorMsg = '该项必填'
+        hasError = true
+      } else {
+        item.error = false
+        item.errorMsg = ''
+      }
+    })
+    if (hasError) {
+      message.error('表单不符合要求，请重新填写')
+      this.setState({ forms })
+      return
+    }
+    const issueMd = inputItems.reduce((a, b) => `${a}### ${b.title}\n${b.value}\n`, '')
+    this.setState({
+      issueMd,
+      visible: true
+    })
+  }
+
   render () {
-    const { cateIdx } = this.state
-    console.log(options)
+    const { cateIdx, forms, issueMd } = this.state
+
     return (
       <div className='page'>
         <Modal
           title="issue 预览"
-          width="700"
+          width='1000px'
           visible={this.state.visible}
           onOk={this.onChange.bind(this, 'visible', false)}
           onCancel={this.onChange.bind(this, 'visible', false)}
         >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <div className='markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(issueMd) }}></div>
         </Modal>
         <div className='issue-header'>
           <div className='issue-header-main'>
@@ -53,22 +105,20 @@ export default class Index extends React.Component {
               <div className='form-item__label'>issue 类型:</div>
               <div className='form-item__input'>
                 <Select value={cateIdx} onChange={this.onChange.bind(this, 'cateIdx')}>
-                  {options.map((item, i) => <Option key={item.title} value={i}>{item.title}</Option>)}
+                  {forms.map((item, i) => <Option key={item.title} value={i}>{item.title}</Option>)}
                 </Select >
               </div>
             </div>
-            {options[cateIdx].formItems.map(item => (
+            {forms[cateIdx].formItems.map((item, i) => (
               <FormItem
                 key={item.title}
-                type={item.type}
-                name='title'
-                title={item.title}
-                placehoder={item.placehoder}
-                onChange={this.onChange}
+                {...item}
+                onBlur={this.handleBlur.bind(this, i)}
+                onChange={this.handleChangeValue.bind(this, i)}
               />
             ))}
             <div className='issue-preview'>
-              <Button onClick={this.onChange.bind(this, 'visible', true)} type='primary'>预览</Button>
+              <Button onClick={this.preview} type='primary'>预览</Button>
             </div>
           </div>
         </div>

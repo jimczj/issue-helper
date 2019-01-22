@@ -10,27 +10,27 @@ module.exports = {
 如果不满足以上两点要求的 bug 报告，issue 会被直接关掉。
 
 请多多理解，您现在的不便将会使 Taro 开发者更高效地定位你的问题，修复你的问题。像你一样的 Taro 的使用者也可以通过搜索找到你提供的 bug，对各方都有很大好处。`,
-  options: [{
+  forms: [{
     title: '功能请求',
     formItems: [
       {
-        title: 'Issue 标题：',
+        title: 'Issue 标题',
         type: 'input',
         placeholder: '填写前请先搜索是否已有issue',
         required: true,
       },
       {
-        title: '重现链接：',
+        title: '重现链接',
         type: 'input',
         required: true,
       },
       {
-        title: '环境（操作系统版本 / 浏览器版本 / Vue 版本等等信息）：',
-        type: 'input',
+        title: '环境（操作系统版本 / 浏览器版本 / Vue 版本等等信息）',
+        type: 'textarea',
         required: true,
       },
       {
-        title: '复现代码：',
+        title: '复现代码',
         type: 'textarea',
         required: true,
       }
@@ -38,7 +38,7 @@ module.exports = {
   }, {
     title: '错误报告',
     formItems: [{
-      title: '复现代码：',
+      title: '复现代码',
       type: 'textarea',
       required: true,
     }]

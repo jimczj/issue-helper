@@ -85,7 +85,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.49",
-    "antd": "^3.11.0",
+    "antd": "^3.12.4",
     "classnames": "^2.2.6",
     "es5-polyfill": "0.0.6",
     "es6-object-assign": "1.1.0",
