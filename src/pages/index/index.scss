@@ -47,17 +47,7 @@ $mainWidth: 800px;
   background-color: #fff;
   overflow: hidden;
 }
-.issue-form {
-  &-item {
-    margin-top: 15px;
-  }
-  &-item-label {
-    font-size: 16px;
-  }
-  &-input {
-    margin-top: 10px;
-  }
-}
+
 .issue-readme {
   padding: 10px;
   font-size: 16px;
@@ -67,4 +57,124 @@ $mainWidth: 800px;
 .issue-preview {
   padding: 20px;
   text-align: center;
+}
+
+.markdown {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+
+  img {
+    vertical-align: middle;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    background-color: #fff;
+    color: #5e6d82;
+    font-size: 14px;
+    border-collapse: collapse;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    th {
+      text-align: left;
+      border-top: 1px solid #f3f7fa;
+      background-color: #fafbfc;
+    }
+
+    td,
+    th {
+      border-bottom: 1px solid #f3f7fa;
+      padding: 10px 8px;
+
+      &:first-child {
+        padding-left: 10px;
+      }
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 16px 0;
+    line-height: 1.5;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-size: 24px;
+  }
+
+  h2,
+  h3 {
+    margin-top: 24px;
+  }
+
+  hr {
+    margin: 1.2em 0;
+    border: 0;
+    border-bottom: 1px solid #C5D9E8;
+  }
+
+  p {
+    padding: 0;
+    line-height: 1.7;
+
+    + p {
+      margin-top: 8px;
+    }
+  }
+
+  code {
+    padding: 0.3em 0.5em;
+    font-size: 0.9em;
+    vertical-align: middle;
+    border: 1px solid #ECECEC;
+    border-radius: 2px;
+    background-color: #F7F7F7;
+  }
+
+  pre {
+    margin: 16px 0;
+    padding: 16px;
+    background-color: #F7F7F7;
+    overflow: auto;
+
+    code {
+      padding: 0;
+      font-size: 1em;
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+    }
+  }
+
+  blockquote {
+    margin: 16px 0;
+    padding: 0 15px;
+    color: #C9C9C9;
+    border-left: 4px solid #ECECEC;
+
+    p {
+      color: #9B9B9B;
+    }
+  }
+
+  ul {
+    margin: 16px 0;
+    padding-left: 24px;
+    list-style: disc;
+
+    li {
+      line-height: 1.8;
+      list-style: disc;
+    }
+  }
+
+  table {
+    margin: 24px 0;
+  }
 }
