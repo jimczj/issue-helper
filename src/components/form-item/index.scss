@@ -1,10 +1,11 @@
 $errorColor:#ff4949;
 $component: '.form-item';
 #{$component} {
-  margin-top: 15px;
+  margin-top: 10px;
 
   &__label {
     font-size: 16px;
+    font-weight: bold;
   }
 
   &__input {

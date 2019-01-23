@@ -2,18 +2,17 @@
 @import '../../style/index.scss';
 
 $mainWidth: 1000px;
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
 
+body,#app {
+  height: 100%;
+}
 .page {
   position: relative;
   width: 100%;
   margin: 0 auto;
   background-color: #ececec;
   overflow: hidden;
+  min-height: 100%;
 }
 
 .issue-header {

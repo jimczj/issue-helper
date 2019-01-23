@@ -1,14 +1,18 @@
+/* eslint-disable no-useless-escape */
 import React from 'react'
-import { Button, Avatar, Select, Modal, message } from 'antd'
+import { Button, Avatar, Modal, message, Radio } from 'antd'
 import { markdown } from 'markdown'
+import _ from 'lodash'
 
 import FormItem from '../../components/form-item'
+import locales from '../../locales'
 import config from '../../../config'
 import './index.scss'
 
-markdown.toHTML('Hello *World*!')
-const Option = Select.Option
-config.forms.forEach(form => {
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
+
+Object.values(config.forms).forEach(form => {
   form.formItems.forEach(inputItem => {
     inputItem.error = ''
     inputItem.errorMsg = ''
@@ -16,30 +20,74 @@ config.forms.forEach(form => {
   })
 })
 
+function isURL (str) {
+  return /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g.test(str)
+}
+
+function getLocale () {
+  const cache = localStorage.getItem('locale')
+  if (cache) {
+    return cache
+  }
+  return window.navigator.language.toLowerCase() === 'zh-cn' ? 'zh' : 'en'
+}
+
 export default class Index extends React.Component {
-  state = {
-    issueMd: '',
-    visible: false,
-    cateIdx: 0,
-    forms: config.forms
+  constructor () {
+    super(...arguments)
+    this.state = {
+      issueMd: '',
+      visible: false,
+      issueType: 'bug',
+      locale: getLocale(),
+      forms: config.forms
+    }
+  }
+
+  getLocaleText (doc) {
+    const { locale } = this.state
+    if (_.isObject(doc)) {
+      return doc[locale]
+    }
+    return doc
+  }
+
+  getMdTitle (inputItem) {
+    if (inputItem.mdTitle) {
+      return inputItem.mdTitle
+    } else if (_.isString(inputItem.label)) {
+      return inputItem.label
+    } else if (_.isObject(inputItem.label) && inputItem.label.en) {
+      return inputItem.label.en
+    }
+    return inputItem.label.zh
   }
 
   handleChangeValue (idx, event) {
-    const { forms, cateIdx } = this.state
-    forms[cateIdx].formItems[idx].value = event.target.value
+    const { forms, issueType } = this.state
+    forms[issueType].formItems[idx].value = event.target.value
     this.setState({ forms })
   }
 
-  onChange (stateName, value) {
-    this.setState({ [stateName]: value })
+  handelVisibleChange = () => {
+    this.setState({ visible: false })
+  }
+
+  handleIssueTypeChange = event => {
+    this.setState({ issueType: event.target.value })
   }
 
   handleBlur (idx) {
-    const { forms, cateIdx } = this.state
-    const item = forms[cateIdx].formItems[idx]
+    const { forms, issueType } = this.state
+    const item = forms[issueType].formItems[idx]
     if (item.required && !item.value.trim()) {
       item.error = true
-      item.errorMsg = '该项必填'
+      const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
+      item.errorMsg = errorMsg
+    } else if (item.isLink && !isURL(item.value.trim())) {
+      item.error = true
+      const errorMsg = this.getLocaleText(locales.linkErrorMsg)
+      item.errorMsg = errorMsg
     } else {
       item.error = false
       item.errorMsg = ''
@@ -48,14 +96,19 @@ export default class Index extends React.Component {
   }
 
   preview = () => {
-    const { forms, cateIdx } = this.state
-    const inputItems = forms[cateIdx].formItems
-    //  检测是否符合
+    const { forms, issueType } = this.state
+    const inputItems = forms[issueType].formItems
     let hasError = false
     inputItems.forEach(item => {
       if (item.required && !item.value.trim()) {
         item.error = true
-        item.errorMsg = '该项必填'
+        const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
+        item.errorMsg = errorMsg
+        hasError = true
+      } else if (item.isLink && !isURL(item.value.trim())) {
+        item.error = true
+        const errorMsg = this.getLocaleText(locales.linkErrorMsg)
+        item.errorMsg = errorMsg
         hasError = true
       } else {
         item.error = false
@@ -63,62 +116,95 @@ export default class Index extends React.Component {
       }
     })
     if (hasError) {
-      message.error('表单不符合要求，请重新填写')
+      const errorMsg = this.getLocaleText(locales.formErrorMsg)
+      message.error(errorMsg)
       this.setState({ forms })
       return
     }
-    const issueMd = inputItems.reduce((a, b) => `${a}### ${b.title}\n${b.value}\n`, '')
+    const issueMd = inputItems.reduce((md, item) => {
+      if (!item.isTitle) {
+        const title = this.getMdTitle(item)
+        return `${md}### ${title}\n\n${item.value}\n\n`
+      }
+      return md
+    }, '')
     this.setState({
       issueMd,
       visible: true
     })
   }
 
+  getTitle () {
+    const { forms, issueType } = this.state
+    const inputItems = forms[issueType].formItems
+    for (let i = 0; i < inputItems.length; i++) {
+      if (inputItems[i].isTitle) {
+        return inputItems[i].value
+      }
+    }
+  }
+
+  handleCreate = () => {
+    const { issueMd } = this.state
+    const issueTitle = this.getTitle()
+    const title = encodeURIComponent(issueTitle).replace(/%2B/gi, '+')
+    const withMarker = `${issueMd}<!-- generated by issue-helper. DO NOT REMOVE -->`
+    const body = encodeURIComponent(withMarker).replace(/%2B/gi, '+')
+
+    localStorage.clear()
+    this.setState({ visible: false })
+    window.open(
+      `${config.repoUrl}/issues/new?title=${title}&body=${body}`
+    )
+  }
+
   render () {
-    const { cateIdx, forms, issueMd } = this.state
+    const { issueType, forms, issueMd } = this.state
 
     return (
       <div className='page'>
         <Modal
-          title="issue 预览"
+          title={this.getLocaleText(locales.modalPreviewTitle)}
           width='1000px'
           visible={this.state.visible}
-          onOk={this.onChange.bind(this, 'visible', false)}
-          onCancel={this.onChange.bind(this, 'visible', false)}
+          onOk={this.handleCreate}
+          onCancel={this.handelVisibleChange}
         >
           <div className='markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(issueMd) }}></div>
         </Modal>
         <div className='issue-header'>
           <div className='issue-header-main'>
             <Avatar size='large' src={config.logo}/>
-            <h1 className='issue-header-title'>{config.title}</h1>
+            <h1 className='issue-header-title'>{this.getLocaleText(config.title)}</h1>
             <Button className='issue-header-btn' size='small'>EN</Button>
           </div>
         </div>
         <div className='issue-main'>
-          <h2>在开始之前</h2>
-          <div className='issue-readme markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(config.readme) }}></div>
-          <div ></div>
-          <h2>填写表单</h2>
+          <h2>{this.getLocaleText(locales.readmeTitle)}</h2>
+          <div className='issue-readme markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(this.getLocaleText(config.readme)) }}></div>
+          <h2>{this.getLocaleText(locales.fillFormTitle)}</h2>
           <div className='issue-form'>
             <div className='form-item'>
-              <div className='form-item__label'>issue 类型:</div>
+              <div className='form-item__label'>{this.getLocaleText(locales.issueTypeLabel)}:</div>
               <div className='form-item__input'>
-                <Select value={cateIdx} onChange={this.onChange.bind(this, 'cateIdx')}>
-                  {forms.map((item, i) => <Option key={item.title} value={i}>{item.title}</Option>)}
-                </Select >
+                <RadioGroup onChange={this.handleIssueTypeChange} value={issueType}>
+                  {forms.bug && <RadioButton value='bug'>{this.getLocaleText(forms.bug.title)}</RadioButton>}
+                  {forms.feature && <RadioButton value='feature'>{this.getLocaleText(forms.feature.title)}</RadioButton>}
+                </RadioGroup>
               </div>
             </div>
-            {forms[cateIdx].formItems.map((item, i) => (
+            {forms[issueType].formItems.map((item, i) => (
               <FormItem
-                key={item.title}
+                key={i}
                 {...item}
+                label={this.getLocaleText(item.label)}
+                placeholder={this.getLocaleText(item.placeholder)}
                 onBlur={this.handleBlur.bind(this, i)}
                 onChange={this.handleChangeValue.bind(this, i)}
               />
             ))}
             <div className='issue-preview'>
-              <Button onClick={this.preview} type='primary'>预览</Button>
+              <Button onClick={this.preview} size='large' type='primary'>{this.getLocaleText(locales.previewBtnText)}</Button>
             </div>
           </div>
         </div>
