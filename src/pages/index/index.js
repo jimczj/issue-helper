@@ -4,6 +4,7 @@ import { Button, Avatar, Modal, message, Radio } from 'antd'
 import { markdown } from 'markdown'
 import _ from 'lodash'
 
+import { isURL, getLocale } from '../../utils'
 import FormItem from '../../components/form-item'
 import locales from '../../locales'
 import config from '../../../config'
@@ -12,25 +13,22 @@ import './index.scss'
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
+// 给 input 增加额外字段
 Object.values(config.forms).forEach(form => {
+  form.formItems.unshift({
+    label: {
+      zh: 'Issue 标题',
+      en: 'Issue title'
+    },
+    type: 'title',
+    required: true
+  })
   form.formItems.forEach(inputItem => {
-    inputItem.error = ''
+    inputItem.error = false
     inputItem.errorMsg = ''
     inputItem.value = ''
   })
 })
-
-function isURL (str) {
-  return /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g.test(str)
-}
-
-function getLocale () {
-  const cache = localStorage.getItem('locale')
-  if (cache) {
-    return cache
-  }
-  return window.navigator.language.toLowerCase() === 'zh-cn' ? 'zh' : 'en'
-}
 
 export default class Index extends React.Component {
   constructor () {
@@ -65,16 +63,12 @@ export default class Index extends React.Component {
 
   getIssueTitle () {
     const { forms, issueType } = this.state
-    const inputItems = forms[issueType].formItems
-    for (let i = 0; i < inputItems.length; i++) {
-      if (inputItems[i].isTitle) {
-        return inputItems[i].value
-      }
-    }
+    return forms[issueType].formItems[0].value
   }
 
   handleValueChange (idx, event) {
     const { forms, issueType } = this.state
+    console.log('handleValueChange', event)
     forms[issueType].formItems[idx].value = event.target.value
     this.setState({ forms })
   }
@@ -154,7 +148,7 @@ export default class Index extends React.Component {
     localStorage.clear()
     this.setState({ visible: false })
     window.open(
-      `${config.repoUrl}/issues/new?title=${title}&body=${body}`
+      `https://github.com/${config.repo}/issues/new?title=${title}&body=${body}`
     )
   }
 

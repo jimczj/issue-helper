@@ -1,6 +1,6 @@
 module.exports = {
   logo: 'https://taro.aotu.io/favicon.ico',
-  repoUrl: 'https://github.com/jimczj/issue-helper',
+  repo: 'NervJS/taro-ui',
   title: 'Taro UI issue helper',
   readme: {
     'zh': `如果是提交 bug，请搜索文档和 issue，确认以下事项：
@@ -28,19 +28,6 @@ Also try to search for your issue - it may have already been answered or even fi
         en: 'Feature Request'
       },
       formItems: [
-        {
-          label: {
-            zh: 'Issue 标题',
-            en: 'Issue title'
-          },
-          type: 'input',
-          placeholder: {
-            zh: '填写前请先搜索',
-            en: 'placeholder'
-          },
-          isTitle: true,
-          required: true,
-        },
         {
           label: {
             zh: '复现代码',
