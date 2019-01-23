@@ -1,17 +1,19 @@
 import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
-import { Input, AutoComplete } from 'antd'
+import { Input, AutoComplete, Select } from 'antd'
 
-import { fetchIssues } from '../../utils'
+import { fetchIssues, fetchVersions } from '../../utils'
 import './index.scss'
 
+const SelectOption = Select.Option
 const Option = AutoComplete.Option
 const TextArea = Input.TextArea
 
 export default class FormItem extends React.Component {
   state = {
-    items: []
+    items: [],
+    versions: []
   }
 
   handleChange = value => {
@@ -39,10 +41,11 @@ export default class FormItem extends React.Component {
       onBlur,
       onChange,
     } = this.props
+    const { items, versions } = this.state
 
     switch (type) {
       case 'title': {
-        const children = this.state.items.map(item => <Option key={item.title} value={item.html_url}>{item.title}</Option>)
+        const children = items.map(item => <Option key={item.title} value={item.html_url}>{item.title}</Option>)
         return <AutoComplete
           allowClear
           value={value}
@@ -55,6 +58,10 @@ export default class FormItem extends React.Component {
         </AutoComplete>
       }
 
+      case 'version':
+        return <Select value={value} style={{ width: 200 }} onChange={this.handleChange}>
+          {versions.map(item => <SelectOption key={item} value={item}>{item}</SelectOption>)}
+        </Select>
 
       case 'input':
         return <Input
@@ -65,6 +72,7 @@ export default class FormItem extends React.Component {
           onBlur={onBlur}
         />
 
+      case 'code':
       case 'textarea':
         return <TextArea
           value={value}
@@ -77,6 +85,10 @@ export default class FormItem extends React.Component {
       default:
         return null
     }
+  }
+
+  componentDidMount () {
+    fetchVersions().then(versions => this.setState({ versions }))
   }
 
   render () {

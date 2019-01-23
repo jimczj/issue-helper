@@ -2,6 +2,7 @@ module.exports = {
   logo: 'https://taro.aotu.io/favicon.ico',
   repo: 'NervJS/taro-ui',
   title: 'Taro UI issue helper',
+  similarIssueCount: 5,
   readme: {
     'zh': `如果是提交 bug，请搜索文档和 issue，确认以下事项：
 
@@ -35,6 +36,14 @@ Also try to search for your issue - it may have already been answered or even fi
           },
           mdTitle: 'code',
           type: 'textarea',
+          required: true,
+        },
+        {
+          label: {
+            zh: '版本',
+            en: 'version'
+          },
+          type: 'version',
           required: true,
         }
       ]

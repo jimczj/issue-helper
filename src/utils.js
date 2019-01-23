@@ -14,10 +14,11 @@ function checkStatus (response) {
 }
 
 export function fetchVersions () {
-  return axios.get(`${endpoint}/repos/${config.repo}/releases?per_page=100`)
+  const repo = config.repo.toLowerCase()
+  return axios.get(`${endpoint}/repos/${repo}/releases?per_page=100`)
     .then(checkStatus)
-    .then(response => response.json())
-    .then(releases => releases.filter(r => !r.prerelease))
+    .then(response => response.data)
+    .then(response => response.filter(r => !r.prerelease))
     .then(releases => releases.map(r => r.tag_name))
     .then(versions => versions.sort((a, b) => -compareVersions(a, b)))
     .catch(err => {
@@ -26,9 +27,9 @@ export function fetchVersions () {
 }
 
 export function fetchIssues (keyword) {
-  const issueCount = config.issueCount || 5
+  const similarIssueCount = config.similarIssueCount || 5
   const q = encodeURIComponent(`is:issue repo:${config.repo} ${keyword}`)
-  return axios.get(`${endpoint}/search/issues?q=${q}&per_page=${issueCount}`)
+  return axios.get(`${endpoint}/search/issues?q=${q}&per_page=${similarIssueCount}`)
     .then(checkStatus)
     .then(res => res.data.items)
 }
