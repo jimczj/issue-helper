@@ -30,6 +30,14 @@ const locales = {
   issueTypeLabel: {
     zh: 'issue 类型',
     en: 'issue type',
+  },
+  featTitle: {
+    zh: '功能请求',
+    en: 'Feature Request'
+  },
+  bugTitle: {
+    zh: '错误报告',
+    en: 'Bug report'
   }
 }
 

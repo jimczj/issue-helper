@@ -45,3 +45,10 @@ export function getLocale () {
   }
   return window.navigator.language.toLowerCase() === 'zh-cn' ? 'zh' : 'en'
 }
+
+export function getLocaleLabel (Locale) {
+  return {
+    'en': '中文',
+    'zh': 'EN'
+  }[Locale]
+}

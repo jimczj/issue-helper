@@ -19,12 +19,16 @@ body,#app {
   width: 100%;
   background-color: #fff;
   padding: 10px 0;
-  &-main {
+
+  &__main {
     width: $mainWidth;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  &-title {
+  &__title {
     font-size: 18px;
     font-weight: 400;
     display: inline;
@@ -32,8 +36,8 @@ body,#app {
     vertical-align: middle;
   }
 
-  &-btn {
-    float: right;
+  &__btn-box {
+    margin-left: 0;
   }
 }
 
@@ -56,6 +60,12 @@ body,#app {
 .issue-preview {
   padding: 20px;
   text-align: center;
+}
+
+.issue-footer {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px 0;
 }
 
 .markdown {

@@ -4,7 +4,7 @@ import { Button, Avatar, Modal, message, Radio } from 'antd'
 import { markdown } from 'markdown'
 import _ from 'lodash'
 
-import { isURL, getLocale } from '../../utils'
+import { isURL, getLocale, getLocaleLabel } from '../../utils'
 import FormItem from '../../components/form-item'
 import locales from '../../locales'
 import config from '../../../config'
@@ -50,6 +50,13 @@ export default class Index extends React.Component {
     return doc
   }
 
+  handleLocaleChange = () => {
+    const { locale } = this.state
+    this.setState({
+      locale: locale === 'zh' ? 'en' : 'zh'
+    })
+  }
+
   getMdTitle (inputItem) {
     if (inputItem.mdTitle) {
       return inputItem.mdTitle
@@ -84,11 +91,11 @@ export default class Index extends React.Component {
   handleBlur (idx) {
     const { forms, issueType } = this.state
     const item = forms[issueType].formItems[idx]
-    if (item.required && !item.value.trim()) {
+    if (item.required && !_.trim(item.value)) {
       item.error = true
       const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
       item.errorMsg = errorMsg
-    } else if (item.isLink && !isURL(item.value.trim())) {
+    } else if (item.isLink && !isURL(_.trim(item.value))) {
       item.error = true
       const errorMsg = this.getLocaleText(locales.linkErrorMsg)
       item.errorMsg = errorMsg
@@ -104,12 +111,12 @@ export default class Index extends React.Component {
     const inputItems = forms[issueType].formItems
     let hasError = false
     inputItems.forEach(item => {
-      if (item.required && !item.value.trim()) {
+      if (item.required && !_.trim(item.value)) {
         item.error = true
         const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
         item.errorMsg = errorMsg
         hasError = true
-      } else if (item.isLink && !isURL(item.value.trim())) {
+      } else if (item.isLink && !isURL(_.trim(item.value))) {
         item.error = true
         const errorMsg = this.getLocaleText(locales.linkErrorMsg)
         item.errorMsg = errorMsg
@@ -153,7 +160,7 @@ export default class Index extends React.Component {
   }
 
   render () {
-    const { issueType, forms, issueMd } = this.state
+    const { issueType, forms, issueMd, locale } = this.state
 
     return (
       <div className='page'>
@@ -166,13 +173,20 @@ export default class Index extends React.Component {
         >
           <div className='markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(issueMd) }}></div>
         </Modal>
+        {/* header */}
         <div className='issue-header'>
-          <div className='issue-header-main'>
-            <Avatar size='large' src={config.logo}/>
-            <h1 className='issue-header-title'>{this.getLocaleText(config.title)}</h1>
-            <Button className='issue-header-btn' size='small'>EN</Button>
+          <div className='issue-header__main'>
+            <div>
+              <Avatar size='large' src={config.logo} />
+              <h1 className='issue-header__title'>{this.getLocaleText(config.title)}</h1>
+            </div>
+            <div>
+              <Button onClick={this.handleLocaleChange} className='issue-header-btn' size='small'>{getLocaleLabel(locale)}</Button>
+            </div>
           </div>
         </div>
+        {/* header */}
+        {/* main */}
         <div className='issue-main'>
           <h2>{this.getLocaleText(locales.readmeTitle)}</h2>
           <div className='issue-readme markdown' dangerouslySetInnerHTML={{ __html: markdown.toHTML(this.getLocaleText(config.readme)) }}></div>
@@ -202,6 +216,10 @@ export default class Index extends React.Component {
             </div>
           </div>
         </div>
+        {/* main */}
+        {/* footer */}
+        <div className='issue-footer'> powered by <a href='https://github.com/jimczj/issue-helper' target='blank'>issue helper</a></div>
+        {/* footer */}
       </div>
     )
   }
