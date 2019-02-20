@@ -14,6 +14,8 @@ const config = require(process.env.path)
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
+const configKey = JSON.stringify(config.forms)
+
 // 给 input 增加额外字段
 Object.values(config.forms).forEach(form => {
   form.formItems.unshift({
@@ -34,12 +36,15 @@ Object.values(config.forms).forEach(form => {
 export default class Index extends React.Component {
   constructor () {
     super(...arguments)
+    const preForms = JSON.parse(localStorage.getItem(configKey))
+    const forms = preForms || config.forms
+
     this.state = {
       issueMd: '',
       visible: false,
       issueType: 'bug',
       locale: getLocale(),
-      forms: config.forms
+      forms
     }
   }
 
@@ -76,9 +81,9 @@ export default class Index extends React.Component {
 
   handleValueChange (idx, event) {
     const { forms, issueType } = this.state
-    console.log('handleValueChange', event)
     forms[issueType].formItems[idx].value = event.target.value
-    this.setState({ forms })
+    this.validForm(idx)
+    this.saveData()
   }
 
   handelVisibleChange = () => {
@@ -87,9 +92,14 @@ export default class Index extends React.Component {
 
   handleIssueTypeChange = event => {
     this.setState({ issueType: event.target.value })
+    this.saveData()
   }
 
-  handleBlur (idx) {
+  saveData () {
+    localStorage.setItem(configKey, JSON.stringify(this.state.forms))
+  }
+
+  validForm (idx) {
     const { forms, issueType } = this.state
     const item = forms[issueType].formItems[idx]
     if (item.required && !trim(item.value)) {
@@ -105,6 +115,10 @@ export default class Index extends React.Component {
       item.errorMsg = ''
     }
     this.setState({ forms })
+  }
+
+  handleBlur (idx) {
+    this.validForm(idx)
   }
 
   handlePreview = () => {
