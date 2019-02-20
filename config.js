@@ -28,6 +28,17 @@ module.exports = {
     en: enReadme
   },
   forms: {
+    'bug': {
+      title: {
+        zh: '错误报告',
+        en: 'Bug report'
+      },
+      formItems: [{
+        label: '复现代码',
+        type: 'textarea',
+        required: true,
+      }]
+    },
     'feature': {
       title: {
         zh: '功能请求',
@@ -52,17 +63,6 @@ module.exports = {
           required: true,
         }
       ]
-    },
-    'bug': {
-      title: {
-        zh: '错误报告',
-        en: 'Bug report'
-      },
-      formItems: [{
-        label: '复现代码',
-        type: 'textarea',
-        required: true,
-      }]
     }
   }
 }

@@ -4,10 +4,41 @@ const program = require('commander')
 const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
+const PropTypes = require('prop-types')
 const { exec } = require('child_process')
 
 function copyFile (src, dist) {
   fs.writeFileSync(dist, fs.readFileSync(src))
+}
+
+const stringType = PropTypes.oneOfType([
+  PropTypes.string.isRequired,
+  PropTypes.shape({
+    zh: PropTypes.string.isRequired,
+    en: PropTypes.string.isRequired
+  })
+])
+
+const formType = PropTypes.shape({
+  title: stringType,
+  formItems: PropTypes.arrayOf(PropTypes.shape({
+    label: stringType,
+    mdTitle: PropTypes.string,
+    type: PropTypes.oneOf(['textarea', 'version', 'code', 'input']).isRequired,
+    required: PropTypes.bool
+  }))
+})
+
+const configPropTypes = {
+  logo: PropTypes.string.isRequired,
+  repo: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  similarIssueCount: PropTypes.number,
+  readme: stringType,
+  forms: PropTypes.shape({
+    'bug': formType,
+    'feature': formType
+  })
 }
 
 program
@@ -53,7 +84,7 @@ program
        Compiled Failed !!!
        `
       ))
-      // process.exit(-1)
+      process.exit(-1)
     })
   })
 
@@ -73,6 +104,14 @@ program
       console.log(`${data}`)
       process.exit(-1)
     })
+  })
+
+program
+  .command('validate')
+  .description('Validate  the config.js conforms to the specification')
+  .action(function () {
+    const config = require(path.join(process.cwd(), 'config.js'))
+    PropTypes.checkPropTypes(configPropTypes, config)
   })
 
 program.parse(process.argv)

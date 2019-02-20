@@ -38,12 +38,12 @@ export default class Index extends React.Component {
     super(...arguments)
     const preForms = JSON.parse(localStorage.getItem(configKey))
     const forms = preForms || config.forms
-
+    const issueType = Object.keys(forms)[0]
     this.state = {
       issueMd: '',
       visible: false,
-      issueType: 'bug',
       locale: getLocale(),
+      issueType,
       forms
     }
   }
@@ -211,8 +211,7 @@ export default class Index extends React.Component {
               <div className='form-item__label'>{this.getLocaleText(locales.issueTypeLabel)}:</div>
               <div className='form-item__input'>
                 <RadioGroup onChange={this.handleIssueTypeChange} value={issueType}>
-                  {forms.bug && <RadioButton value='bug'>{this.getLocaleText(forms.bug.title)}</RadioButton>}
-                  {forms.feature && <RadioButton value='feature'>{this.getLocaleText(forms.feature.title)}</RadioButton>}
+                  {Object.keys(forms).map(item => <RadioButton key={item} value={item}>{this.getLocaleText(forms[item].title)}</RadioButton>)}
                 </RadioGroup>
               </div>
             </div>
