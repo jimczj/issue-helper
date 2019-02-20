@@ -68,6 +68,11 @@ body,#app {
   padding: 10px 0;
 }
 
+.ant-modal-body {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
 .markdown {
   position: relative;
   height: 100%;

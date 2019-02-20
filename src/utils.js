@@ -2,8 +2,9 @@
 import compareVersions from 'compare-versions'
 import axios from 'axios'
 
-import config from '../config'
+const config = require(process.env.path)
 
+const npmEndpoint = 'https://registry.npm.taobao.org'
 const endpoint = 'https://api.github.com'
 
 function checkStatus (response) {
@@ -14,15 +15,34 @@ function checkStatus (response) {
 }
 
 export function fetchVersions () {
-  const repo = config.repo.toLowerCase()
-  return axios.get(`${endpoint}/repos/${repo}/releases?per_page=100`)
+  const npmRepo = config.repo.split('/')[1]
+  const npmPromise = axios.get(`${npmEndpoint}/${npmRepo}`)
     .then(checkStatus)
     .then(response => response.data)
+    .then(({ versions }) => Object
+      .keys(versions)
+    )
+    .then(versions =>
+      versions.sort((a, b) => -compareVersions(a, b))
+    )
+    .then(versions => versions.slice(0, 100))
+
+  const repo = config.repo.toLowerCase()
+
+  return axios.get(`${endpoint}/repos/${repo}/releases?per_page=100`)
+    .then(checkStatus)
+    .then(response => {
+      if (!response.data || !response.data.length) {
+        throw Error('github release api is not opened.')
+      }
+      return response.data
+    })
     .then(response => response.filter(r => !r.prerelease))
     .then(releases => releases.map(r => r.tag_name))
     .then(versions => versions.sort((a, b) => -compareVersions(a, b)))
     .catch(err => {
       console.warn(err)
+      return npmPromise
     })
 }
 
