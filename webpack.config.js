@@ -1,13 +1,17 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const autoprefixer = require('autoprefixer')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
-const config = require('./config.js')
-
+const cwdPath = relativePath => path.join(process.cwd(), relativePath)
 const resolveApp = relativePath => path.resolve(__dirname, relativePath)
+
+const configPath = cwdPath('config.js')
+const config = require(configPath)
+
 
 const babelLoader = require.resolve('babel-loader')
 const tsLoader = {
@@ -68,24 +72,26 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
 })
 const uglifyJSPlugin = new UglifyJSPlugin({
   uglifyOptions: {
-    ie8: true,
-    keep_fnames: true
+    keep_fnames: false
   }
 })
-const cleanWebpackPlugin = new CleanWebpackPlugin('dist/**')
+
+const cleanWebpackPlugin = new CleanWebpackPlugin(['dist'], { verbose: false, root: process.cwd() })
+const definePlugin = new webpack.DefinePlugin({
+  'process.env.path': JSON.stringify(configPath)
+})
 
 module.exports = {
   mode: 'production',
   entry: {
     index: resolveApp('./src/index.js'),
-    'es5-polyfill': 'es5-polyfill'
+    'es5-polyfill': require.resolve('es5-polyfill')
   },
   output: {
-    path: resolveApp('./dist'),
+    path: cwdPath('./dist'),
     filename: 'js/[name].[hash:4].js',
     publicPath: '/'
   },
-  devtool: 'source-map',
   resolve: {
     symlinks: true,
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -95,7 +101,46 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: babelLoader
+        use: {
+          loader: babelLoader,
+          options: {
+            presets: [
+              [require.resolve('@babel/preset-env'), {
+                'loose': false,
+                'useBuiltIns': 'entry',
+                'targets': {
+                  'browsers': [
+                    'ie >= 8',
+                    'Chrome >= 21',
+                    'Firefox >= 1',
+                    'Edge >= 13',
+                    'last 3 versions'
+                  ]
+                }
+              }]
+            ],
+            plugins: [
+              [
+                require.resolve('babel-plugin-import'),
+                {
+                  'libraryName': 'antd',
+                  'libraryDirectory': 'lib',
+                  'style': 'css'
+                },
+                'ant'
+              ],
+              [require.resolve('babel-plugin-lodash')],
+              require.resolve('@babel/plugin-syntax-dynamic-import'),
+              require.resolve('@babel/plugin-proposal-object-rest-spread'),
+              require.resolve('@babel/plugin-proposal-class-properties'),
+              [require.resolve('@babel/plugin-transform-react-jsx'), {
+                'pragma': 'React.createElement'
+              }],
+              require.resolve('babel-plugin-transform-es3-member-expression-literals'),
+              require.resolve('babel-plugin-transform-es3-property-literals')
+            ]
+          }
+        }
       },
       {
         test: /\.tsx?$/,
@@ -116,7 +161,7 @@ module.exports = {
       }
     ]
   },
-  plugins: [cleanWebpackPlugin, htmlWebpackPlugin, miniCssExtractPlugin],
+  plugins: [cleanWebpackPlugin, htmlWebpackPlugin, miniCssExtractPlugin, definePlugin],
   optimization: {
     minimizer: [uglifyJSPlugin]
   }

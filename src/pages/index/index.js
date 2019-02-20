@@ -2,13 +2,14 @@
 import React from 'react'
 import { Button, Avatar, Modal, message, Radio } from 'antd'
 import { markdown } from 'markdown'
-import _ from 'lodash'
+import { isString, isObject, trim } from 'lodash'
 
 import { isURL, getLocale, getLocaleLabel } from '../../utils'
 import FormItem from '../../components/form-item'
 import locales from '../../locales'
-import config from '../../../config'
 import './index.scss'
+
+const config = require(process.env.path)
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
@@ -44,7 +45,7 @@ export default class Index extends React.Component {
 
   getLocaleText (doc) {
     const { locale } = this.state
-    if (_.isObject(doc)) {
+    if (isObject(doc)) {
       return doc[locale]
     }
     return doc
@@ -60,9 +61,9 @@ export default class Index extends React.Component {
   getMdTitle (inputItem) {
     if (inputItem.mdTitle) {
       return inputItem.mdTitle
-    } else if (_.isString(inputItem.label)) {
+    } else if (isString(inputItem.label)) {
       return inputItem.label
-    } else if (_.isObject(inputItem.label) && inputItem.label.en) {
+    } else if (isObject(inputItem.label) && inputItem.label.en) {
       return inputItem.label.en
     }
     return inputItem.label.zh
@@ -91,11 +92,11 @@ export default class Index extends React.Component {
   handleBlur (idx) {
     const { forms, issueType } = this.state
     const item = forms[issueType].formItems[idx]
-    if (item.required && !_.trim(item.value)) {
+    if (item.required && !trim(item.value)) {
       item.error = true
       const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
       item.errorMsg = errorMsg
-    } else if (item.isLink && !isURL(_.trim(item.value))) {
+    } else if (item.isLink && !isURL(trim(item.value))) {
       item.error = true
       const errorMsg = this.getLocaleText(locales.linkErrorMsg)
       item.errorMsg = errorMsg
@@ -111,12 +112,12 @@ export default class Index extends React.Component {
     const inputItems = forms[issueType].formItems
     let hasError = false
     inputItems.forEach(item => {
-      if (item.required && !_.trim(item.value)) {
+      if (item.required && !trim(item.value)) {
         item.error = true
         const errorMsg = this.getLocaleText(locales.requiredErrorMsg)
         item.errorMsg = errorMsg
         hasError = true
-      } else if (item.isLink && !isURL(_.trim(item.value))) {
+      } else if (item.isLink && !isURL(trim(item.value))) {
         item.error = true
         const errorMsg = this.getLocaleText(locales.linkErrorMsg)
         item.errorMsg = errorMsg
