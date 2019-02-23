@@ -2,13 +2,32 @@
 
 const program = require('commander')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs-extra')
 const chalk = require('chalk')
 const PropTypes = require('prop-types')
 const { exec } = require('child_process')
 
 function copyFile (src, dist) {
   fs.writeFileSync(dist, fs.readFileSync(src))
+}
+
+function compile () {
+  const indexHtml = `${process.cwd()}/dist/index.html`
+  exec(`cp -Rf ../dist ${process.cwd()}/dist`)
+  const config = require(`${process.cwd()}/config.js`)
+  const html = fs.readFileSync(indexHtml, 'utf-8')
+  const content = html
+    .replace('$_logo_$', config.logo)
+    .replace('$_title_$', config.title)
+    .replace('$_config_$', JSON.stringify(config))
+  fs.outputFileSync(indexHtml, content)
+  console.log(chalk.green(`
+      编译成功!!!
+      生成的文件路径为：${process.cwd()}/dist
+      Compiled successfully!!!
+      The generated file path is： ${process.cwd()}/dist
+    `
+  ))
 }
 
 const stringType = PropTypes.oneOfType([
@@ -60,42 +79,15 @@ program
   .command('build')
   .description('Build project with config.js')
   .action(function () {
-    const webpackPath = path.resolve(__dirname, '../node_modules/webpack/bin/webpack.js')
-    const webpackConfigPath = path.resolve(__dirname, '../webpack.config.js')
-    console.log(chalk.green(`
-      正在编译中...
-      Compiling...
-    `
-    ))
-    const cmd = exec(`node ${webpackPath} --config ${webpackConfigPath}`, { timeout: 1000000 })
-    cmd.stdout.on('data', function (data) {
-      console.log(`${data}`)
-      console.log(chalk.green(`
-        编译成功!!!
-        Compiled successfully!!!
-      `
-      ))
-    })
-
-    cmd.stderr.on('data', function (data) {
-      console.log(`${data}`)
-      console.log(chalk.red(`
-       编译失败!!!
-       Compiled Failed !!!
-       `
-      ))
-      process.exit(-1)
-    })
+    compile()
   })
 
 program
   .command('preview')
   .description('Preview page with config.js')
   .action(function () {
-    const webpackServePath = path.resolve(__dirname, '../node_modules/.bin/webpack-dev-server')
-    const webpackConfigPath = path.resolve(__dirname, '../webpack.config.dev.js')
-    console.log(chalk.green('监听 config.js 变化中.....'))
-    const cmd = exec(`node ${webpackServePath} --inline --config ${webpackConfigPath} --open`)
+    compile()
+    const cmd = exec(`node node_modules/http-server/bin/http-server ${process.cwd()}/dist`)
     cmd.stdout.on('data', data => {
       console.log(`${data}`)
     })

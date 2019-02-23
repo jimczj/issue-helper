@@ -4,12 +4,10 @@ import { Button, Avatar, Modal, message, Radio } from 'antd'
 import { markdown } from 'markdown'
 import { isString, isObject, trim } from 'lodash'
 
-import { isURL, getLocale, getLocaleLabel } from '../../utils'
+import { isURL, getLocale, getLocaleLabel, config } from '../../utils'
 import FormItem from '../../components/form-item'
 import locales from '../../locales'
 import './index.scss'
-
-const config = require(process.env.path)
 
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group

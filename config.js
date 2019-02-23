@@ -19,7 +19,7 @@ const zhReadme = `如果是提交 bug，请搜索文档和 issue，确认以下�
 `
 
 module.exports = {
-  logo: 'https://taro.aotu.io/favicon.ico',
+  logo: 'https://github.com/fluidicon.png',
   repo: 'NervJS/taro-ui',
   title: 'Taro UI issue helper',
   similarIssueCount: 5,

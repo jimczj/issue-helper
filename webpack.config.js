@@ -52,6 +52,7 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: 'css/[name].[hash:4].css'
 })
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
+  prod: true,
   title: config.title,
   logo: config.logo,
   inject: false,

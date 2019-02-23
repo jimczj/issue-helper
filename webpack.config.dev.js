@@ -30,6 +30,7 @@ const sassLoader = {
   }
 }
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
+  dev: true,
   title: config.title,
   logo: config.logo,
   inject: false,
@@ -59,7 +60,7 @@ module.exports = {
   devServer: {
     contentBase: cwdPath('./dist'),
     compress: true,
-    port: 9001
+    port: 9002
   },
   module: {
     rules: [
