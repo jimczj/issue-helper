@@ -28,9 +28,12 @@
   </head>
   <body style='-webkit-print-color-adjust: exact;'>
     <div id="app"></div>
-    <script type="text/javascript">
-      window.config = $_config_$
-    </script>
+    <% if (htmlWebpackPlugin.options.prod){ %>
+      <script type="text/javascript">
+        window.config = $_config_$
+      </script>
+     <% } %>
+
     <% jsFiles.forEach(jsFile => { %>
       <script type="text/javascript" src="<%= jsFile %>"></script>
     <% }) %>

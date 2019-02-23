@@ -7,39 +7,110 @@ For usage questions, please use the following resources:
 Also try to search for your issue - it may have already been answered or even fixed in the development branch. However, if you find that an old, closed issue still persists in the latest version, you should open a new issue using the form below instead of commenting on the old issue.
 `
 
-const zhReadme = `如果是提交 bug，请搜索文档和 issue，确认以下事项：
+const zhReadme = `issue 列表只接受 bug 报告或是新功能请求 (feature requests)。这意味着我们不接受用法问题。如果你开的 issue 不符合规定，它将会被立刻关闭。
 
-* 该问题没有在其他 issue 和文档讨论到，不属于重复内容
+对于使用中遇到的问题，请使用以下资源：
 
-* 分割线以下的模板除了「 补充信息」每一样都必填
-
-如果不满足以上两点要求的 bug 报告，issue 会被直接关掉。
-
-请多多理解，您现在的不便将会使 Taro 开发者更高效地定位你的问题，修复你的问题。像你一样的 Taro 的使用者也可以通过搜索找到你提供的 bug，对各方都有很大好处。
+仔细阅读 文档
+在 StackOverflow (英文) 或是 SegmentFault（中文）搜索和提问
+最后，在开 issue 前，可以先搜索一下以往的旧 issue - 你遇到的问题可能已经有人提了，也可能已经在最新版本中被修正。注意：如果你发现一个已经关闭的旧 issue 在最新版本中仍然存在，请不要在旧 issue 下面留言，而应该用下面的表单开一个新的 issue。
 `
 
 module.exports = {
-  logo: 'https://github.com/fluidicon.png',
-  repo: 'NervJS/taro-ui',
-  title: 'Taro UI issue helper',
-  similarIssueCount: 5,
+  logo: 'https://github.com/fluidicon.png', // 页面 logo
+  repo: 'jimczj/issue-helper', // 仓库地址，会根据此项配置跳转到 github issue 页面，同时也会根据仓库名获取版本信息
+  title: 'issue helper', // 页面标题
+  similarIssueCount: 5, // 用户填写 issue 标题时搜索的相似 issue 数量
   readme: {
-    zh: zhReadme,
-    en: enReadme
+    zh: zhReadme, // 填写表单前中文说明，支持 md 格式
+    en: enReadme // 填写表单前英文说明，支持 md 格式
   },
   forms: {
-    'bug': {
+    'bug': { // bug issue 表单配置
       title: {
         zh: '错误报告',
         en: 'Bug report'
       },
-      formItems: [{
-        label: '复现代码',
-        type: 'textarea',
-        required: true,
-      }]
+      formItems: [
+        {
+          label: {
+            zh: '版本信息',
+            en: 'version'
+          },
+          mdTitle: '版本信息',
+          type: 'version',
+          required: true,
+        },
+        {
+          label: {
+            zh: '问题描述',
+            en: 'Description'
+          },
+          type: 'textarea', // 输入框类型，可选 textarea，version，input，其中 version 类型会自动根据 repo 配置项获取版本信息
+          required: true, // 是否必填
+          mdTitle: '问题描述', // 生成 issue 时的标题
+          placeholder: {
+            zh: '站在其它人的角度尽可能清晰地、简洁地把问题描述清楚',
+            en: 'Describe the problem as clearly and succinctly as possible from the other person’s point of view'
+          }, // 占位符，可填写提示语言
+        },
+        {
+          label: {
+            zh: '复现步骤',
+            en: 'Repetition steps'
+          },
+          type: 'textarea',
+          required: true,
+          mdTitle: '复现步骤',
+          placeholder: `
+            1. Go to '...'
+            2. Click on '....'
+            3. Scroll down to '....'
+            4. See error
+          `,
+        },
+        {
+          label: {
+            zh: '复现代码',
+            en: 'Code to help with debugging'
+          },
+          type: 'textarea',
+          required: true,
+          mdTitle: '复现代码',
+        },
+        {
+          label: {
+            zh: '报错信息',
+            en: 'Error message'
+          },
+          type: 'textarea',
+          required: true,
+          mdTitle: '报错信息',
+        },
+        {
+          label: {
+            zh: '系统信息',
+            en: 'System information'
+          },
+          type: 'textarea',
+          required: true,
+          mdTitle: '系统信息',
+          placeholder: 'Taro v1.2 及以上版本已添加 `taro info` 命令，方便大家查看系统及依赖信息，运行该命令后将结果贴下面即可'
+        },
+        {
+          label: {
+            zh: '补充信息',
+            en: 'Additional information'
+          },
+          type: 'textarea',
+          required: false,
+          mdTitle: '补充信息',
+          placeholder: '可选。根据你的调查研究，出现这个问题的原因可能在哪里？'
+        }
+
+      ]
     },
-    'feature': {
+    'feature': { // feature issue 表单配置
       title: {
         zh: '功能请求',
         en: 'Feature Request'
@@ -47,20 +118,30 @@ module.exports = {
       formItems: [
         {
           label: {
-            zh: '复现代码',
-            en: 'code'
+            zh: '这个功能解决了什么问题？',
+            en: 'What problem does this feature solve?'
           },
-          mdTitle: 'code',
           type: 'textarea',
           required: true,
+          mdTitle: '这个功能解决了什么问题？',
         },
         {
           label: {
-            zh: '版本',
-            en: 'version'
+            zh: '你期望的功能是怎样的？',
+            en: 'What functions do you expect?'
           },
-          type: 'version',
+          type: 'textarea',
           required: true,
+          mdTitle: '你期望的功能是怎样的？',
+        },
+        {
+          label: {
+            zh: '补充信息',
+            en: 'Additional information'
+          },
+          type: 'textarea',
+          required: false,
+          mdTitle: '补充信息',
         }
       ]
     }

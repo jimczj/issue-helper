@@ -11,23 +11,26 @@ function copyFile (src, dist) {
   fs.writeFileSync(dist, fs.readFileSync(src))
 }
 
-function compile () {
+function compile (cb) {
+  const distPath = path.resolve(__dirname, '../dist')
   const indexHtml = `${process.cwd()}/dist/index.html`
-  exec(`cp -Rf ../dist ${process.cwd()}/dist`)
-  const config = require(`${process.cwd()}/config.js`)
-  const html = fs.readFileSync(indexHtml, 'utf-8')
-  const content = html
-    .replace('$_logo_$', config.logo)
-    .replace('$_title_$', config.title)
-    .replace('$_config_$', JSON.stringify(config))
-  fs.outputFileSync(indexHtml, content)
-  console.log(chalk.green(`
+  exec(`npx rimraf ${process.cwd()}/dist && cp -Rf ${distPath} ${process.cwd()}/dist`, function () {
+    const config = require(`${process.cwd()}/config.js`)
+    const html = fs.readFileSync(indexHtml, 'utf-8')
+    const content = html
+      .replace('$_logo_$', config.logo)
+      .replace('$_title_$', config.title)
+      .replace('$_config_$', JSON.stringify(config))
+    fs.outputFileSync(indexHtml, content)
+    console.log(chalk.green(`
       编译成功!!!
       生成的文件路径为：${process.cwd()}/dist
       Compiled successfully!!!
       The generated file path is： ${process.cwd()}/dist
     `
-  ))
+    ))
+    cb && cb()
+  })
 }
 
 const stringType = PropTypes.oneOfType([
@@ -86,15 +89,16 @@ program
   .command('preview')
   .description('Preview page with config.js')
   .action(function () {
-    compile()
-    const cmd = exec(`node node_modules/http-server/bin/http-server ${process.cwd()}/dist`)
-    cmd.stdout.on('data', data => {
-      console.log(`${data}`)
-    })
+    compile(function () {
+      const cmd = exec(`npx http-server ${process.cwd()}/dist`)
+      cmd.stdout.on('data', data => {
+        console.log(`${data}`)
+      })
 
-    cmd.stderr.on('data', data => {
-      console.log(`${data}`)
-      process.exit(-1)
+      cmd.stderr.on('data', data => {
+        console.log(`${data}`)
+        process.exit(-1)
+      })
     })
   })
 

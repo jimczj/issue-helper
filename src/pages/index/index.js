@@ -146,7 +146,7 @@ export default class Index extends React.Component {
       return
     }
     const issueMd = inputItems.reduce((md, item) => {
-      if (!item.isTitle) {
+      if (item.type !== 'title') {
         const title = this.getMdTitle(item)
         return `${md}### ${title}\n\n${item.value}\n\n`
       }

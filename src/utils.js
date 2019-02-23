@@ -2,7 +2,8 @@
 import compareVersions from 'compare-versions'
 import axios from 'axios'
 
-export const config = process.env.path ? require(process.env.path) : window.config
+
+export const config = window.config
 
 const npmEndpoint = 'https://registry.npm.taobao.org'
 const endpoint = 'https://api.github.com'
