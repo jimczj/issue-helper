@@ -80,6 +80,14 @@ module.exports = {
 
 ```
 
+## 检验配置是否正确
+
+在 config.js 同级目录下执行如下命令，如果没有 warning,则配置无误
+
+```shell
+issue-helper validate
+```
+
 ## 预览页面
 
 在 config.js 同级目录下执行如下命令，会开启 http 服务帮助预览。当 config.js 改变时，需要重新执行命令，不会热更新。
