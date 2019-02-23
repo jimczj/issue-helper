@@ -1,10 +1,17 @@
 {
   "name": "issue-helper",
   "version": "0.0.1",
-  "license": "MIT",
+  "description": "Generate issue helper static pages through configuration",
   "bin": {
     "issue-helper": "bin/issue.js"
   },
+  "files": [
+    "bin",
+    "src",
+    "config.js",
+    "webpack.config.js",
+    "webpack.config.dev.js"
+  ],
   "scripts": {
     "dev": "node_modules/.bin/webpack-dev-server --config webpack.config.dev.js --open",
     "build": "webpack --config webpack.config.js --hide-modules",
@@ -110,5 +117,15 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jimczj/taro-ui-issue-helper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jimczj/taro-ui-issue-helper/issues"
+  },
+  "homepage": "https://github.com/jimczj/taro-ui-issue-helper",
+  "author": "jimczj",
+  "license": "MIT"
 }
