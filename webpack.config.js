@@ -26,7 +26,7 @@ const urlLoader = {
 const fileLoader = {
   loader: require.resolve('file-loader'),
   options: {
-    outputPath: 'fonts/'
+    outputPath: './fonts/'
   }
 }
 const cssLoader = {
@@ -91,7 +91,7 @@ module.exports = {
   output: {
     path: cwdPath('./dist'),
     filename: 'js/[name].[hash:4].js',
-    publicPath: '/'
+    publicPath: './'
   },
   resolve: {
     symlinks: true,
