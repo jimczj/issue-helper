@@ -13,7 +13,7 @@ function copyFile (src, dist) {
 
 function compile (cb) {
   const distPath = path.resolve(__dirname, '../dist')
-  const indexHtml = `${process.cwd()}/dist/index.html`
+  const indexHtml = `${process.cwd()}/index.html`
   exec(`cp -Rf ${distPath}/* ${process.cwd()}`, function () {
     const config = require(`${process.cwd()}/config.js`)
     const html = fs.readFileSync(indexHtml, 'utf-8')
