@@ -1,6 +1,6 @@
 {
   "name": "issue-helper",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Generate issue helper static pages through configuration",
   "bin": {
     "issue-helper": "bin/issue.js"
