@@ -88,7 +88,9 @@ export default class FormItem extends React.Component {
   }
 
   componentDidMount () {
-    fetchVersions().then(versions => this.setState({ versions }))
+    if (this.props.type === 'version') {
+      fetchVersions().then(versions => this.setState({ versions }))
+    }
   }
 
   render () {

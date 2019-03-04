@@ -14,7 +14,7 @@ function copyFile (src, dist) {
 function compile (cb) {
   const distPath = path.resolve(__dirname, '../dist')
   const indexHtml = `${process.cwd()}/dist/index.html`
-  exec(`npx rimraf ${process.cwd()}/dist && cp -Rf ${distPath} ${process.cwd()}/dist`, function () {
+  exec(`cp -Rf ${distPath}/* ${process.cwd()}`, function () {
     const config = require(`${process.cwd()}/config.js`)
     const html = fs.readFileSync(indexHtml, 'utf-8')
     const content = html
@@ -24,9 +24,9 @@ function compile (cb) {
     fs.outputFileSync(indexHtml, content)
     console.log(chalk.green(`
       编译成功!!!
-      生成的文件路径为：${process.cwd()}/dist
+      生成的文件路径为：${process.cwd()}
       Compiled successfully!!!
-      The generated file path is： ${process.cwd()}/dist
+      The generated file path is： ${process.cwd()}
     `
     ))
     cb && cb()
@@ -90,7 +90,7 @@ program
   .description('Preview page with config.js')
   .action(function () {
     compile(function () {
-      const cmd = exec(`npx http-server ${process.cwd()}/dist`)
+      const cmd = exec(`npx http-server ${process.cwd()}`)
       cmd.stdout.on('data', data => {
         console.log(`${data}`)
       })

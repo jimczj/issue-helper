@@ -1,6 +1,6 @@
 {
   "name": "issue-helper",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Generate issue helper static pages through configuration",
   "bin": {
     "issue-helper": "bin/issue.js"
@@ -11,7 +11,7 @@
     "config.js"
   ],
   "scripts": {
-    "dev": "node_modules/.bin/webpack-dev-server --config webpack.config.dev.js --open",
+    "dev": "webpack-dev-server --config webpack.config.dev.js --open",
     "build": "webpack --config webpack.config.js --hide-modules",
     "deploy": "npm run build && http-server ./dist",
     "lint": "eslint ./src --fix",
