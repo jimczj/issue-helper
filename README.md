@@ -4,6 +4,10 @@
 
 根据配置文件生成 github issue 提交表单
 
+## 例子
+
+https://nervjs.github.io/taro-ui-issue-helper/ 
+
 ## 下载安装
 
 ```shell
