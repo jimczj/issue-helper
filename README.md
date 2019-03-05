@@ -6,7 +6,8 @@
 
 ## 例子
 
-demo: https://github.com/NervJS/taro-ui-issue-helper
+demo 仓库: https://github.com/NervJS/taro-ui-issue-helper
+
 page: https://nervjs.github.io/taro-ui-issue-helper/ 
 
 ## 下载安装
